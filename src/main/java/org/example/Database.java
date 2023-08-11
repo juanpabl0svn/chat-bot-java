@@ -1,41 +1,31 @@
 package org.example;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Database {
+    private static final String JDBC_URL = "jdbc:mysql://localhost/users";
+    private static final String JDBC_USER = "root";
+    private static final String JDBC_PASSWORD = "";
 
-    public Database(){
-
-    }
-
-    public boolean findId(String id){
-        return Objects.equals(id,"100");
-    }
-
-    /*
     public static void main(String[] args) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        File jsonFile = new File("data.json");
-
         try {
-            // Leer JSON desde el archivo y convertirlo en un mapa
-            Map<String, Object> jsonData = objectMapper.readValue(jsonFile, HashMap.class);
+            // Cargar el controlador JDBC
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Modificar datos en el mapa
-            jsonData.put("nuevoCampo", "Nuevo valor");
+            // Establecer la conexión
+            Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
 
-            // Escribir el mapa modificado de nuevo al archivo JSON
-            objectMapper.writeValue(jsonFile, jsonData);
+            System.out.println("Conexión exitosa a la base de datos MySQL");
 
-            System.out.println("Lectura y escritura de JSON completada exitosamente.");
-        } catch (IOException e) {
+            // Cerrar la conexión
+            connection.close();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error: Controlador JDBC no encontrado");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error de conexión a la base de datos");
             e.printStackTrace();
         }
     }
-    */
 }

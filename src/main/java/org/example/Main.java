@@ -1,5 +1,6 @@
 package org.example;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
@@ -8,11 +9,13 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
     static int attemps = 0;
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws SQLException {
 
         int isRegistered;
 
         Main main = new Main();
+
 
         System.out.println("Hola, yo soy tu asistente virtual" +
                 ", ya estas registrado en Nu Bank? \n" +
@@ -42,13 +45,13 @@ public class Main {
     public boolean logIn(){
         String id;
         boolean loggedIn;
-        Database db = new Database();
         int repeatLogIn;
 
         System.out.println("Ingrese por favor su numero de " +
                 "cedula: \n");
         id = scanner.next();
-        loggedIn = db.findId(id);
+
+        loggedIn = true;
 
         if (loggedIn){
             System.out.println("Logged In");
