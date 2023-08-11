@@ -5,9 +5,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Database {
 
+    public Database(){
+
+    }
+
+    public boolean findId(String id){
+        return Objects.equals(id,"100");
+    }
+
+    /*
     public static void main(String[] args) {
         ObjectMapper objectMapper = new ObjectMapper();
         File jsonFile = new File("data.json");
@@ -27,4 +37,5 @@ public class Database {
             e.printStackTrace();
         }
     }
+    */
 }
