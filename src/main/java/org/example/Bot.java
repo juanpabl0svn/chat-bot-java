@@ -5,20 +5,13 @@ import java.util.Objects;
 
 public class Bot {
 
-
-    public Bot(){
+    public static void main(String[] args) {
+        Database db = new Database();
+        String query = "SELECT * FROM usuarios";
+        System.out.println(db.executeQuery(query));
 
 
     }
 
-    public void findUser() throws SQLException {
-        try{
-        }catch (Exception e){
-            System.out.println(e);
 
-        }
-
-
-        //return Objects.equals(id, "1000");
-    }
 }
