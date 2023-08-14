@@ -16,6 +16,15 @@ public class Main {
 
         Main main = new Main();
 
+        Database db = new Database();
+
+        User user = db.getUserById(1);
+
+        System.out.println(user);
+
+        /*
+
+
 
         System.out.println("Hola, yo soy tu asistente virtual" +
                 ", ya estas registrado en Nu Bank? \n" +
@@ -32,6 +41,8 @@ public class Main {
 
         }
         main.sayBye();
+
+         */
 
 
 

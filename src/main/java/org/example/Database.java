@@ -42,6 +42,31 @@ public class Database {
         }
     }
 
+    public User getUserById(int id){
+        User cliente = null;
+        String selectQuery = "SELECT * FROM users WHERE nit = 1;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+
+                cliente = new User(name,surname,String.valueOf(id));
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cliente;
+    }
+
+
     public void viewUsers() {
         String selectQuery = "SELECT * FROM usuarios";
         try {
