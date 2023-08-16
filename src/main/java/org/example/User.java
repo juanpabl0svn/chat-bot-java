@@ -34,4 +34,8 @@ public class User {
         this.surname = surname;
         this.NIT = NIT;
     }
+
+    public User(){
+
+    }
 }

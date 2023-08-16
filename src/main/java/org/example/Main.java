@@ -1,6 +1,7 @@
 package org.example;
 
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Scanner;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
@@ -8,23 +9,14 @@ import java.util.Scanner;
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static int attemps = 0;
+    static Database db = new Database();
+
+    static User user = new User();
+    static Main main = new Main();
 
 
     public static void main(String[] args) throws SQLException {
-
         int isRegistered;
-
-        Main main = new Main();
-
-        Database db = new Database();
-
-        User user = db.getUserById(1);
-
-        System.out.println(user);
-
-        /*
-
-
 
         System.out.println("Hola, yo soy tu asistente virtual" +
                 ", ya estas registrado en Nu Bank? \n" +
@@ -42,10 +34,6 @@ public class Main {
         }
         main.sayBye();
 
-         */
-
-
-
     }
 
     public void sayBye(){
@@ -54,15 +42,18 @@ public class Main {
     }
 
     public boolean logIn(){
-        String id;
+        String nit;
         boolean loggedIn;
         int repeatLogIn;
 
         System.out.println("Ingrese por favor su numero de " +
                 "cedula: \n");
-        id = scanner.next();
 
-        loggedIn = true;
+        nit = scanner.next();
+
+        user = db.getUserById(nit);
+
+        loggedIn = user != null;
 
         if (loggedIn){
             System.out.println("Logged In");
@@ -93,13 +84,13 @@ public class Main {
     public boolean menu(){
 
         int option;
-        String name = "juan";
+
 
         do{
-            System.out.println("Bienvenido "+name+", estoy" +
+            System.out.println("Bienvenido "+user.name+ " " + user.surname+ ", estoy" +
                     " aqui para resolver tu dudas y inquietudes, " +
                     "selecciona una de las siguientes opciones:\n" +
-                    "0.Salir" +
+                    "0.Salir\n" +
                     "1.Saldo pendiente\n" +
                     "2.Saldo en mi cuenta\n" +
                     "3.Cambiar información personal\n" +
@@ -107,7 +98,14 @@ public class Main {
                     "5.Conocer creditos\n");
             option = scanner.nextInt();
 
-        }while(option != 0);
+            if (option == 0) {
+                break;
+            }
+            else if (option == 1){
+                db.getMyCurrency(user.NIT);
+            }
+
+        }while(true);
 
         return false;
 

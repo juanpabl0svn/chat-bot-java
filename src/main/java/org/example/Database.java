@@ -42,12 +42,11 @@ public class Database {
         }
     }
 
-    public User getUserById(int id){
+    public User getUserById(String id){
         User cliente = null;
-        String selectQuery = "SELECT * FROM users WHERE nit = 1;";
+        String selectQuery = "SELECT * FROM users WHERE nit = " + id + ";";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
-            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -67,18 +66,15 @@ public class Database {
     }
 
 
-    public void viewUsers() {
-        String selectQuery = "SELECT * FROM usuarios";
+    public float getMyCurrency(String id){
+        float currency = 0;
+        String selectQuery = "SELECT * FROM users WHERE nit = " + id + ";";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String nombre = resultSet.getString("nombre");
-                String email = resultSet.getString("email");
-
-                System.out.println("ID: " + id + ", Nombre: " + nombre + ", Email: " + email);
+            if (resultSet.next()) {
+                currency = resultSet.getFloat("currency");
             }
 
             resultSet.close();
@@ -86,14 +82,15 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return currency;
+
     }
 
     public static void main(String[] args) {
         Database dbManager = new Database();
 
         // ... Otro código aquí ...
-
-        dbManager.viewUsers();
 
         dbManager.closeConnection();
     }
