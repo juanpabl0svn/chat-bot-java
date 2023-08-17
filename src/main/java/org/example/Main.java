@@ -10,13 +10,14 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
     static int attemps = 0;
     static Database db = new Database();
-
     static User user = new User();
     static Main main = new Main();
 
 
     public static void main(String[] args) throws SQLException {
         int isRegistered;
+        boolean succesfulyCreated;
+
 
         System.out.println("Hola, yo soy tu asistente virtual" +
                 ", ya estas registrado en Nu Bank? \n" +
@@ -30,15 +31,49 @@ public class Main {
             main.logIn();
         }
         if (isRegistered == 2){
+            succesfulyCreated = main.signIn();
+            if (succesfulyCreated){
+                System.out.println("Usuario correctamente creado");
+                main.menu();
+
+            }else{
+                succesfulyCreated = main.signIn();
+                if (succesfulyCreated){
+                    System.out.println("USario creado con exito !! \n");
+                    main.menu();
+                }else{
+                    System.out.println("Algo salio mal, vuelve a intentarlo mas tarde");
+                }
+
+            }
 
         }
         main.sayBye();
+
 
     }
 
     public void sayBye(){
         System.out.println("\nGracias por usar nuestro servicio " +
                 "de asistente virtual, nos vemos pronto!!");
+    }
+
+    public boolean signIn(){
+        String name, surname;
+
+        System.out.println("Vamos a registrarte en el sistema " +
+                "por favor ingresa tu primer y segundo nombre si posees uno\n");
+        name = scanner.nextLine();
+        System.out.println("Ingrese sus apellidos:\n");
+        surname = scanner.nextLine();
+
+        user = db.createUser(name,surname);
+
+        System.out.println(user);
+        System.out.println(user.name);
+
+        return user != null;
+
     }
 
     public boolean logIn(){
@@ -49,7 +84,7 @@ public class Main {
         System.out.println("Ingrese por favor su numero de " +
                 "cedula: \n");
 
-        nit = scanner.next();
+        nit = scanner.nextLine();
 
         user = db.getUserById(nit);
 
@@ -84,7 +119,6 @@ public class Main {
     public boolean menu(){
 
         int option;
-
 
         do{
             System.out.println("Bienvenido "+user.name+ " " + user.surname+ ", estoy" +

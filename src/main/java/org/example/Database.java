@@ -22,15 +22,6 @@ public class Database {
         }
     }
 
-    public void closeConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public ResultSet executeQuery(String query) {
         try {
@@ -61,8 +52,33 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return cliente;
+    }
+
+    public User createUser(String name, String surname){
+        String id;
+        String insertQuery = "INSERT INTO users (name,surname) VALUES (?, ?)";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, surname);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if(rowsAffected > 0) {
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    id = generatedKeys.getNString(1);
+                    System.out.println(id);
+                    return new User(name, surname,id);
+                }
+                generatedKeys.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
     }
 
 
@@ -90,9 +106,6 @@ public class Database {
     public static void main(String[] args) {
         Database dbManager = new Database();
 
-        // ... Otro código aquí ...
-
-        dbManager.closeConnection();
     }
 
 }
