@@ -33,9 +33,9 @@ public class Database {
         }
     }
 
-    public User getUserById(String id){
+    public User getUserById(String nit){
         User cliente = null;
-        String selectQuery = "SELECT * FROM users WHERE nit = " + id + ";";
+        String selectQuery = "SELECT * FROM users WHERE nit = " + nit + ";";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -44,7 +44,7 @@ public class Database {
                 String name = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
 
-                cliente = new User(name,surname,String.valueOf(id));
+                cliente = new User(nit,name,surname);
             }
 
             resultSet.close();
@@ -55,30 +55,25 @@ public class Database {
         return cliente;
     }
 
-    public User createUser(String name, String surname){
-        String id;
-        String insertQuery = "INSERT INTO users (name,surname) VALUES (?, ?)";
+    public User createUser(String nit,String name, String surname){
+        User user = null;
+        String insertQuery = "INSERT INTO users (nit,name,surname) VALUES (?, ?,?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, surname);
+            preparedStatement.setString(1, nit);
+            preparedStatement.setString(2, name);
+            preparedStatement.setString(3, surname);
 
             int rowsAffected = preparedStatement.executeUpdate();
 
             if(rowsAffected > 0) {
-                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    id = generatedKeys.getNString(1);
-                    System.out.println(id);
-                    return new User(name, surname,id);
-                }
-                generatedKeys.close();
+                user =  new User(nit,name, surname);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
-        return null;
+        return user;
     }
 
 

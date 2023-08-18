@@ -10,7 +10,7 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
     static int attemps = 0;
     static Database db = new Database();
-    static User user = new User();
+    static User user = null;
     static Main main = new Main();
 
 
@@ -59,15 +59,17 @@ public class Main {
     }
 
     public boolean signIn(){
-        String name, surname;
+        String nit,name, surname;
 
-        System.out.println("Vamos a registrarte en el sistema " +
-                "por favor ingresa tu primer y segundo nombre si posees uno\n");
-        name = scanner.nextLine();
+        System.out.println("Vamos a registrarte en el sistema:\n" +
+                "Por favor ingresa tu numero de identificación");
+        nit = scanner.next();
+        System.out.println("Ingresa tu primer y segundo nombre si posees uno\n");
+        name = scanner.next();
         System.out.println("Ingrese sus apellidos:\n");
-        surname = scanner.nextLine();
+        surname = scanner.next();
 
-        user = db.createUser(name,surname);
+        user = db.createUser(nit,name,surname);
 
         System.out.println(user);
         System.out.println(user.name);
@@ -84,7 +86,7 @@ public class Main {
         System.out.println("Ingrese por favor su numero de " +
                 "cedula: \n");
 
-        nit = scanner.nextLine();
+        nit = scanner.next();
 
         user = db.getUserById(nit);
 
@@ -107,11 +109,8 @@ public class Main {
                     return logIn();
                 }
             }
-
             System.out.println("\nNumero maximo de intentos" +
                     "favor intentar mas tarde !!");
-
-
         }
         return false;
     }
@@ -136,7 +135,7 @@ public class Main {
                 break;
             }
             else if (option == 1){
-                db.getMyCurrency(user.NIT);
+                db.getMyCurrency(user.nit);
             }
 
         }while(true);

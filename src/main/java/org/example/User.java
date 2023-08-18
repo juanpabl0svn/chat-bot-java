@@ -1,9 +1,18 @@
 package org.example;
 
 public class User {
+    public String nit;
     public String name;
     public String surname;
-    public String NIT;
+
+
+    public String getNit() {
+        return nit;
+    }
+
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
 
     public String getName() {
         return name;
@@ -21,21 +30,10 @@ public class User {
         this.surname = surname;
     }
 
-    public String getNIT() {
-        return NIT;
-    }
-
-    public void setNIT(String NIT) {
-        this.NIT = NIT;
-    }
-
-    public User(String name, String surname, String NIT){
+    public User(String nit, String name, String surname){
         this.name = name;
         this.surname = surname;
-        this.NIT = NIT;
+        this.nit = nit;
     }
 
-    public User(){
-
-    }
 }
