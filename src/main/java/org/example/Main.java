@@ -115,6 +115,7 @@ public class Main {
         return false;
     }
 
+
     public boolean menu(){
 
         int option;
@@ -135,7 +136,8 @@ public class Main {
                 break;
             }
             else if (option == 1){
-                db.getMyCurrency(user.nit);
+                float balance  = db.getBalance(user.nit);
+                System.out.println("Tu salgo actual es de "+balance);
             }
 
         }while(true);

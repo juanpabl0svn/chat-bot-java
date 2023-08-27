@@ -1,48 +1,53 @@
--- Tabla: Usuarios
-CREATE TABLE Usuarios (
-id INT PRIMARY KEY,
-nit VARCHAR(15) UNIQUE,
-nombre VARCHAR(50),
-email VARCHAR(100) UNIQUE,
-fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+CREATE TABLE IF NOT EXISTS users (
+user_id INT PRIMARY KEY AUTO_INCREMENT,
+nit VARCHAR(15) UNIQUE NOT NULL,
+name VARCHAR(50) NOT NULL,
+surname VARCHAR(50) NOT NULL,
+email VARCHAR(100) UNIQUE NOT NULL,
+registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla: Cuentas
-CREATE TABLE Cuentas (
-id INT PRIMARY KEY,
-usuario_id INT,
-saldo DECIMAL(15, 2),
-tipo_cuenta ENUM('ahorro', 'corriente'),
-FOREIGN KEY (usuario_id) REFERENCES Usuarios(id)
+
+CREATE TABLE IF NOT EXISTS accounts (
+account_id INT PRIMARY KEY,
+owner_nit VARCHAR(15)NOT NULL,
+balance DECIMAL(15, 2) DEFAULT 0,
+password VARCHAR(20) NOT NULL,
+FOREIGN KEY (owner_nit) REFERENCES users(nit)
 );
 
--- Tabla: Transacciones
-CREATE TABLE Transacciones (
-id INT PRIMARY KEY,
-cuenta_origen_id INT,
-cuenta_destino_id INT,
-monto DECIMAL(15, 2),
-fecha_transaccion DATETIME,
-FOREIGN KEY (cuenta_origen_id) REFERENCES Cuentas(id),
-FOREIGN KEY (cuenta_destino_id) REFERENCES Cuentas(id)
+CREATE TABLE IF NOT EXISTS transactions (
+transaaction_id INT PRIMARY KEY,
+root_account INT NOT NULL,
+destination_account INT NOT NULL,
+amount DECIMAL(15, 2) NOT NULL,
+transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (root_account) REFERENCES accounts(account_id),
+FOREIGN KEY (destination_account) REFERENCES accounts(account_id)
 );
 
--- Ejemplo de registros de prueba para Usuarios
-INSERT INTO Usuarios (id, nit, nombre, email)
-VALUES
-(1, '123456789', 'Juan Pérez', 'juan@example.com'),
-(2, '987654321', 'María López', 'maria@example.com');
+-- Insertar registros en la tabla 'users'
+INSERT INTO users (nit, name, surname, email) VALUES
+('1234', 'Juan', 'Pérez', 'juan@example.com'),
+('5678', 'María', 'López', 'maria@example.com'),
+('9123', 'Carlos', 'Gómez', 'carlos@example.com'),
+('4567', 'Laura', 'Martínez', 'laura@example.com'),
+('8912', 'Andrés', 'Rodríguez', 'andres@example.com');
 
--- Ejemplo de registros de prueba para Cuentas
-INSERT INTO Cuentas (id, usuario_id, saldo, tipo_cuenta)
-VALUES
-(1, 1, 1000.00, 'corriente'),
-(2, 1, 5000.00, 'ahorro'),
-(3, 2, 2500.00, 'corriente');
+-- Insertar registros en la tabla 'accounts'
+INSERT INTO accounts (account_id, owner_nit, balance, password) VALUES
+(1, '1234', 1500.00, 'pass123'),
+(2, '5678', 2500.00, 'secure456'),
+(3, '9123', 750.00, 'mypass789'),
+(4, '4567', 3000.00, 'secret567'),
+(5, '8912', 500.00, 'access987');
 
--- Ejemplo de registros de prueba para Transacciones
-INSERT INTO Transacciones (id, cuenta_origen_id, cuenta_destino_id, monto, fecha_transaccion)
-VALUES
-(1, 1, 2, 500.00, '2023-03-10 09:30:00'),
-(2, 2, 1, 100.00, '2023-03-12 15:45:00'),
-(3, 3, 1, 700.00, '2023-03-15 11:20:00');
+-- Insertar registros en la tabla 'transactions'
+INSERT INTO transactions (transaaction_id, root_account, destination_account, amount) VALUES
+(1, 1, 2, 200.00),
+(2, 3, 4, 50.00),
+(3, 2, 5, 100.00),
+(4, 4, 1, 500.00),
+(5, 5, 3, 25.00);
+

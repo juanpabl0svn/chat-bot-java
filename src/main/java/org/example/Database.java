@@ -36,7 +36,7 @@ public class Database {
 
     public User getUserById(String nit){
         User cliente = null;
-        String selectQuery = "SELECT * FROM users WHERE nit = " + nit + ";";
+        String selectQuery = "SELECT * FROM users WHERE nit = " + nit;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -78,28 +78,33 @@ public class Database {
     }
 
 
-    public float getMyCurrency(String id){
-        float currency = 0;
-        String selectQuery = "SELECT * FROM users WHERE nit = " + id + ";";
+    public float getBalance(String id){
+        float balance = 0;
+        String selectQuery = "SELECT a.balance as balance " +
+                "FROM users u " +
+                "JOIN accounts a ON u.nit = a.owner_nit " +
+                "WHERE u.user_id = " + id;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                currency = resultSet.getFloat("currency");
+                balance = resultSet.getFloat("balance");
             }
 
             resultSet.close();
             preparedStatement.close();
         } catch (SQLException e) {
+
+            System.out.println(e);
             e.printStackTrace();
+            return balance;
         }
 
-        return currency;
+        return balance;
 
     }
 
-    public strig
 
     public static void main(String[] args) {
         Database dbManager = new Database();
