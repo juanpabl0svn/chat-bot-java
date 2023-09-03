@@ -122,14 +122,16 @@ public class Main {
 
         int option;
 
+        float currency;
+
         do{
             System.out.println("Bienvenido "+user.name+ " " + user.surname+ ", estoy" +
                     " aqui para resolver tu dudas y inquietudes, " +
                     "selecciona una de las siguientes opciones:\n" +
                     "0.Salir\n" +
-                    "1.Saldo pendiente\n" +
-                    "2.Saldo en mi cuenta\n" +
-                    "3.Cambiar información personal\n" +
+                    "1.Saldo en mi cuenta\n" +
+                    "2.Saldo en pendiente\n" +
+                    "3.Abonar dinero al credito\n" +
                     "4.Eliminar cuenta\n" +
                     "5.Conocer creditos\n");
             option = scanner.nextInt();
@@ -138,13 +140,20 @@ public class Main {
                 break;
             }
             else if (option == 1){
-                float balance  = db.getBalance(user.nit);
-                System.out.println("Tu saldo actual es de "+currencyInstance.format(balance));
+                currency  = db.getBalance(user.nit);
+                System.out.println("Tu saldo actual es de "+currencyInstance.format(currency));
+            }
+            else if(option == 2){
+                currency  = db.getDebt(user.nit);
+                System.out.println("Tu credito esta en "+currencyInstance.format(currency));
+            }
+            else if (option == 3){
+                System.out.println("¿Cuanto desea abonar?");
             }
 
-            System.out.println("\n Hay algo mas que pueda hacer por ti?" +
-                    "\n 1.Si " +
-                    "\n Otro. No ");
+            System.out.println("Hay algo mas que pueda hacer por ti?\n" +
+                    "1.Si\n" +
+                    "Otro.No\n");
 
             option = scanner.nextInt();
 

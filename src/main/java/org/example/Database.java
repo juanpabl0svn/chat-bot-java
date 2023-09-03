@@ -105,8 +105,37 @@ public class Database {
         return balance;
 
     }
+    public float getDebt(String id){
+        float debt = -1;
+        String selectQuery = "SELECT a.debt as debt " +
+                "FROM users u " +
+                "JOIN accounts a ON u.nit = a.owner_nit " +
+                "WHERE u.nit = " + id;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-    public 
+            if (resultSet.next()) {
+                debt = resultSet.getFloat("debt");
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException e) {
+
+            System.out.println(e);
+            e.printStackTrace();
+            return debt;
+        }
+
+        return debt;
+
+    }
+
+    public float payDebt(String id){
+        
+    }
+
 
 
     public static void main(String[] args) {
