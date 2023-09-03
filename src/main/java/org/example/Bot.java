@@ -7,7 +7,7 @@ public class Bot {
 
     public static void main(String[] args) {
         Database db = new Database();
-        String query = "SELECT * FROM usuarios";
+        String query = "SELECT * FROM users";
         System.out.println(db.executeQuery(query));
     }
 }

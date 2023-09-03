@@ -1,8 +1,8 @@
 package org.example;
 
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.Scanner;
+import java.text.NumberFormat;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -12,6 +12,8 @@ public class Main {
     static Database db = new Database();
     static User user = null;
     static Main main = new Main();
+    static NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();
+
 
 
     public static void main(String[] args) throws SQLException {
@@ -137,8 +139,17 @@ public class Main {
             }
             else if (option == 1){
                 float balance  = db.getBalance(user.nit);
-                System.out.println("Tu salgo actual es de "+balance);
+                System.out.println("Tu saldo actual es de "+currencyInstance.format(balance));
             }
+
+            System.out.println("\n Hay algo mas que pueda hacer por ti?" +
+                    "\n 1.Si " +
+                    "\n Otro. No ");
+
+            option = scanner.nextInt();
+
+            if (option != 1)break;
+
 
         }while(true);
 

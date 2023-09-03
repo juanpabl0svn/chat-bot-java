@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
 public class Database {
     private static final String JDBC_URL = "jdbc:mysql://localhost/users";
     private static final String JDBC_USER = "root";
@@ -79,11 +80,11 @@ public class Database {
 
 
     public float getBalance(String id){
-        float balance = 0;
+        float balance = -1;
         String selectQuery = "SELECT a.balance as balance " +
                 "FROM users u " +
                 "JOIN accounts a ON u.nit = a.owner_nit " +
-                "WHERE u.user_id = " + id;
+                "WHERE u.nit = " + id;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -104,6 +105,8 @@ public class Database {
         return balance;
 
     }
+
+    public 
 
 
     public static void main(String[] args) {
