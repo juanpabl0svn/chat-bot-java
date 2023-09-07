@@ -1,8 +1,8 @@
 package org.example;
+
 import java.security.PublicKey;
 import java.sql.*;
 import java.sql.SQLException;
-
 
 
 public class Database {
@@ -22,10 +22,9 @@ public class Database {
     }
 
 
-    public Account getAccount(String username, String password){
+    public Account getAccount(String username, String password) {
         Account account = null;
         String selectQuery = "SELECT * FROM users WHERE username = " + username + "AND password = " + password;
-
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -45,10 +44,33 @@ public class Database {
     }
 
 
+    public Account createAccount(String nit, String username, String password) {
+        User user = null;
+        String insertQuery = "INSERT INTO users (nit,name,surname) VALUES (? , ? , ?)";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            preparedStatement.setString(1, nit);
+            preparedStatement.setString(2, name);
+            preparedStatement.setString(3, surname);
+            preparedStatement.setString(4, email);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                user = new User(nit, name, surname, email);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return new Account();
+    }
 
 
+    public boolean accountExists(String)
 
-    public User getUserById(String nit){
+
+    public User getUserById(String nit) {
         User cliente = null;
         String selectQuery = "SELECT * FROM users WHERE nit = " + nit;
         try {
@@ -58,8 +80,9 @@ public class Database {
             if (resultSet.next()) {
                 String name = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
+                String email = resultSet.getString("email");
 
-                cliente = new User(nit,name,surname);
+                cliente = new User(nit, name, surname, email);
             }
 
             resultSet.close();
@@ -70,19 +93,20 @@ public class Database {
         return cliente;
     }
 
-    public User createUser(String nit,String name, String surname){
+    public User createUser(String nit, String name, String surname, String email) {
         User user = null;
-        String insertQuery = "INSERT INTO users (nit,name,surname) VALUES (?, ?,?)";
+        String insertQuery = "INSERT INTO users (nit,name,surname) VALUES (? , ? , ?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
             preparedStatement.setString(1, nit);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, surname);
+            preparedStatement.setString(4, email);
 
             int rowsAffected = preparedStatement.executeUpdate();
 
-            if(rowsAffected > 0) {
-                user =  new User(nit,name, surname);
+            if (rowsAffected > 0) {
+                user = new User(nit, name, surname, email);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,7 +116,7 @@ public class Database {
     }
 
 
-    public float getBalance(String id){
+    public float getBalance(String id) {
         float balance = -1;
         String selectQuery = "SELECT a.balance as balance " +
                 "FROM users u " +
@@ -118,7 +142,8 @@ public class Database {
         return balance;
 
     }
-    public float getDebt(String id){
+
+    public float getDebt(String id) {
         float debt = -1;
         String selectQuery = "SELECT a.debt as debt " +
                 "FROM users u " +
@@ -151,7 +176,6 @@ public class Database {
     }
 
      */
-
 
 
     public static void main(String[] args) {

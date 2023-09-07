@@ -4,8 +4,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 import java.text.NumberFormat;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static int attemps = 0;
@@ -40,7 +39,7 @@ public class Main {
             }else{
                 succesfulyCreated = main.signIn();
                 if (succesfulyCreated){
-                    System.out.println("USario creado con exito !! \n");
+                    System.out.println("Usuario creado con exito !! \n");
                     main.menu();
                 }else{
                     System.out.println("Algo salio mal, vuelve a intentarlo mas tarde");
@@ -60,7 +59,9 @@ public class Main {
     }
 
     public boolean signIn(){
-        String nit,name, surname;
+        String nit, name, surname, email, username, password;
+        boolean NaN = true;
+        int tries = 0;
 
         System.out.println("Vamos a registrarte en el sistema:\n" +
                 "Por favor ingresa tu numero de identificación");
@@ -69,13 +70,44 @@ public class Main {
         name = scanner.next();
         System.out.println("Ingrese sus apellidos:\n");
         surname = scanner.next();
+        System.out.println("Ingrese su correo electronico:\n");
+        email = scanner.next();
 
-        user = db.createUser(nit,name,surname);
+        user = db.createUser(nit,name,surname,email);
 
         if (user != null){
+            System.out.println("Ingrese un nombre de para su usuario");
+            username = scanner.next();
 
+            do{
+                System.out.println("Ingrese una contraseña de 4 digitos numericos");
+                password = scanner.next();
+                NaN = !(password != null && password.matches("[0-9]+"));
+                tries++;
+            }while(NaN || tries > 2);
 
+            if (tries > 2){
+                System.out.println("Numero máximo de intentos alcanzado, intentelo de nuevo mas tarde");
+                return false;
+            }
+            else{
+                tries = 0;
+            }
 
+            do{
+                System.out.println("Ingrese de nuevo su contraseña");
+                password = scanner.next();
+                NaN = !(password != null && password.matches("[0-9]+"));
+                tries++;
+            }while(NaN || tries > 2);
+            if (tries > 2){
+                System.out.println("Numero máximo de intentos alcanzado, intentelo de nuevo mas tarde");
+                return false;
+            }
+            account = db.createAccount(nit,username,password);
+            if (account == null){
+
+            }
         }
 
         System.out.println(user);

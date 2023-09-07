@@ -3,6 +3,7 @@ package org.example;
 import com.mysql.cj.xdevapi.Client;
 
 public class User {
+    public String email;
     public String nit;
     public String name;
     public String surname;
@@ -32,15 +33,23 @@ public class User {
         this.surname = surname;
     }
 
-    public User(String nit, String name, String surname){
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public User(String nit, String name, String surname, String email){
         this.name = name;
         this.surname = surname;
         this.nit = nit;
+        this.email = email;
     }
 
     public static void main(String[] args){
-        User user  = new User("1234","juan","Sanchez");
-        System.out.println(user.);
+
     }
 
 }
