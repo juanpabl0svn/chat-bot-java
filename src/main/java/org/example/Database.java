@@ -1,11 +1,8 @@
 package org.example;
 import java.security.PublicKey;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.*;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 
 
 public class Database {
@@ -25,15 +22,31 @@ public class Database {
     }
 
 
-    public ResultSet executeQuery(String query) {
+    public Account getAccount(String username, String password){
+        Account account = null;
+        String selectQuery = "SELECT * FROM users WHERE username = " + username + "AND password = " + password;
+
         try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            return statement.executeQuery();
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                account = new Account();
+            }
+
+            resultSet.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return account;
     }
+
+
+
+
 
     public User getUserById(String nit){
         User cliente = null;
@@ -132,9 +145,12 @@ public class Database {
 
     }
 
+    /*
     public float payDebt(String id){
-        
+
     }
+
+     */
 
 
 

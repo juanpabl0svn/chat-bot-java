@@ -11,17 +11,16 @@ public class Main {
     static int attemps = 0;
     static Database db = new Database();
     static User user = null;
+
+    static Account account = null;
     static Main main = new Main();
     static NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();
-
-
 
     public static void main(String[] args) throws SQLException {
         int isRegistered;
         boolean succesfulyCreated;
 
-
-        System.out.println("Hola, yo soy tu asistente virtual" +
+        System.out.println("Hola, yo soy, tu asistente virtual" +
                 ", ya estas registrado en Nu Bank? \n" +
                 "1.Si\n" +
                 "2.No\n" +
@@ -73,6 +72,12 @@ public class Main {
 
         user = db.createUser(nit,name,surname);
 
+        if (user != null){
+
+
+
+        }
+
         System.out.println(user);
         System.out.println(user.name);
 
@@ -80,21 +85,21 @@ public class Main {
 
     }
 
-    public boolean logIn(){
-        String nit;
-        boolean loggedIn;
+    public boolean logIn() {
+        String username;
         int repeatLogIn;
+        String password;
 
-        System.out.println("Ingrese por favor su numero de " +
-                "cedula: \n");
+        System.out.println("Ingrese por favor su Usuario");
+        username = scanner.next();
+        System.out.println("Ingrese su contraseña");
+        password = Crypto.Encriptar(scanner.next());
 
-        nit = scanner.next();
+        //user = db.getUserById(nit);
+        account = db.getAccount(username,password);
 
-        user = db.getUserById(nit);
 
-        loggedIn = user != null;
-
-        if (loggedIn){
+        if (account != null){
             System.out.println("Logged In");
             return menu();
         }else{
@@ -103,7 +108,7 @@ public class Main {
                         "¿Desea intentarlo de nuevo?\n" +
                         "1.Si\n" +
                         "2.No\n" +
-                        "otro.Salir\n");
+                        "Otro.Salir\n");
                 repeatLogIn = scanner.nextInt();
 
                 if (repeatLogIn == 1){
@@ -116,6 +121,13 @@ public class Main {
         }
         return false;
     }
+
+    /*
+    public boolean createAccount(){
+
+    }
+
+     */
 
 
     public boolean menu(){
@@ -132,6 +144,7 @@ public class Main {
                     "1.Saldo en mi cuenta\n" +
                     "2.Saldo en pendiente\n" +
                     "3.Abonar dinero al credito\n" +
+
                     "4.Eliminar cuenta\n" +
                     "5.Conocer creditos\n");
             option = scanner.nextInt();

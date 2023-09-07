@@ -1,5 +1,7 @@
 package org.example;
 
+import com.mysql.cj.xdevapi.Client;
+
 public class User {
     public String nit;
     public String name;
@@ -34,6 +36,11 @@ public class User {
         this.name = name;
         this.surname = surname;
         this.nit = nit;
+    }
+
+    public static void main(String[] args){
+        User user  = new User("1234","juan","Sanchez");
+        System.out.println(user.);
     }
 
 }

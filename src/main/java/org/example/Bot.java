@@ -6,8 +6,6 @@ import java.util.Objects;
 public class Bot {
 
     public static void main(String[] args) {
-        Database db = new Database();
-        String query = "SELECT * FROM users";
-        System.out.println(db.executeQuery(query));
+        System.out.println("hola");
     }
 }
