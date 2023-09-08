@@ -50,15 +50,11 @@ public class Database {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
             preparedStatement.setString(1, nit);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, surname);
-            preparedStatement.setString(4, email);
+            preparedStatement.setString(2, username);
+            preparedStatement.setString(3, password);
 
             int rowsAffected = preparedStatement.executeUpdate();
 
-            if (rowsAffected > 0) {
-                user = new User(nit, name, surname, email);
-            }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -67,7 +63,10 @@ public class Database {
     }
 
 
-    public boolean accountExists(String)
+    public boolean usernameExist(String username){
+        return true;
+
+    }
 
 
     public User getUserById(String nit) {

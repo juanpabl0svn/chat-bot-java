@@ -1,6 +1,8 @@
 package org.example;
 
+import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.text.NumberFormat;
 
@@ -10,148 +12,106 @@ public class Main {
     static int attemps = 0;
     static Database db = new Database();
     static User user = null;
-
     static Account account = null;
     static Main main = new Main();
     static NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();
+
+    public void sayHi(){
+        System.out.println("Hola, yo soy, tu asistente virtual, ya estas registrado en Nu Bank? \n1.Si\n2.No\nOtro.Salir\n");
+    }
 
     public static void main(String[] args) throws SQLException {
         int isRegistered;
         boolean succesfulyCreated;
 
-        System.out.println("Hola, yo soy, tu asistente virtual" +
-                ", ya estas registrado en Nu Bank? \n" +
-                "1.Si\n" +
-                "2.No\n" +
-                "Otro.Salir\n");
+        main.sayHi();
 
         isRegistered  = scanner.nextInt();
 
-        if (isRegistered == 1){
-            main.logIn();
-        }
-        if (isRegistered == 2){
-            succesfulyCreated = main.signIn();
-            if (succesfulyCreated){
-                System.out.println("Usuario correctamente creado");
-                main.menu();
-
-            }else{
-                succesfulyCreated = main.signIn();
-                if (succesfulyCreated){
-                    System.out.println("Usuario creado con exito !! \n");
-                    main.menu();
-                }else{
-                    System.out.println("Algo salio mal, vuelve a intentarlo mas tarde");
-                }
-
-            }
-
+        switch (isRegistered) {
+            case 1 -> main.logIn();
+            case 2 -> main.signIn();
+            default -> {}
         }
         main.sayBye();
-
-
     }
 
     public void sayBye(){
-        System.out.println("\nGracias por usar nuestro servicio " +
-                "de asistente virtual, nos vemos pronto!!");
+        System.out.println("\nGracias por usar nuestro servicio de asistente virtual, nos vemos pronto!!");
     }
 
     public boolean signIn(){
-        String nit, name, surname, email, username, password;
-        boolean NaN = true;
-        int tries = 0;
+        ArrayList<String> PersonalData = new ArrayList<>();
+        ArrayList<String> AccountData = new ArrayList<>();
+        String[] questionsPersonalData = {"numero de identificación","primer nombre", "primer apellido","correo electronico"};
+        String tries;
 
-        System.out.println("Vamos a registrarte en el sistema:\n" +
-                "Por favor ingresa tu numero de identificación");
-        nit = scanner.next();
-        System.out.println("Ingresa tu primer y segundo nombre si posees uno\n");
-        name = scanner.next();
-        System.out.println("Ingrese sus apellidos:\n");
-        surname = scanner.next();
-        System.out.println("Ingrese su correo electronico:\n");
-        email = scanner.next();
-
-        user = db.createUser(nit,name,surname,email);
-
-        if (user != null){
-            System.out.println("Ingrese un nombre de para su usuario");
-            username = scanner.next();
-
-            do{
-                System.out.println("Ingrese una contraseña de 4 digitos numericos");
-                password = scanner.next();
-                NaN = !(password != null && password.matches("[0-9]+"));
-                tries++;
-            }while(NaN || tries > 2);
-
-            if (tries > 2){
-                System.out.println("Numero máximo de intentos alcanzado, intentelo de nuevo mas tarde");
-                return false;
-            }
-            else{
-                tries = 0;
-            }
-
-            do{
-                System.out.println("Ingrese de nuevo su contraseña");
-                password = scanner.next();
-                NaN = !(password != null && password.matches("[0-9]+"));
-                tries++;
-            }while(NaN || tries > 2);
-            if (tries > 2){
-                System.out.println("Numero máximo de intentos alcanzado, intentelo de nuevo mas tarde");
-                return false;
-            }
-            account = db.createAccount(nit,username,password);
-            if (account == null){
-
-            }
+        for(String question: questionsPersonalData){
+            System.out.println("Ingrese su " + question);
+            PersonalData.add(scanner.next());
         }
 
-        System.out.println(user);
+        user = db.createUser(PersonalData.get(0),PersonalData.get(1),PersonalData.get(2),PersonalData.get(3));
+        //user = new User(PersonalData.get(0),PersonalData.get(1),PersonalData.get(2),PersonalData.get(3));
+
         System.out.println(user.name);
 
-        return user != null;
+        if (user == null){
+            System.out.println("Algo salió mal, ¿Desea intentarlo de nuevo? \n1.Si\nOtro.No");
+            tries = scanner.next();
+            if (tries.equals("1")) {main.signIn();}
+            return false;
+        }
 
+        System.out.println("Usuario correctamente creado, ahora digite la siguiente información para la creación de su cuenta\nIngrese un nombre de usuario");
+        AccountData.add(scanner.next());
+        while (db.usernameExist(AccountData.get(0))){
+            System.out.println("Usuario ya en uso, digite uno nuevo");
+            AccountData.set(0,scanner.next());
+        }
+        do{
+            System.out.println("Digite una contraseña numerica de 4 digitos");
+            AccountData.add(scanner.next());
+        }while (AccountData.get(1) != null && AccountData.get(1).matches("[0-9]+") && AccountData.get(1).length() == 4);
+
+        account = db.createAccount(PersonalData.get(0),AccountData.get(0),AccountData.get(1));
+
+        main.menu();
+        return true;
     }
 
-    public boolean logIn() {
-        String username;
-        int repeatLogIn;
-        String password;
 
-        System.out.println("Ingrese por favor su Usuario");
-        username = scanner.next();
-        System.out.println("Ingrese su contraseña");
-        password = Crypto.Encriptar(scanner.next());
+    public boolean logIn() {
+        String[] questionsLogIn = {"su usuario", "su contraseña"};
+        ArrayList<String> data = new ArrayList<>();
+        String repeatLogIn;
+
+        for (String question: questionsLogIn){
+            System.out.println("Ingrese por favor " + question);
+            data.add(scanner.next());
+        }
+
 
         //user = db.getUserById(nit);
-        account = db.getAccount(username,password);
+        account = db.getAccount(data.get(0),data.get(1));
 
-
-        if (account != null){
-            System.out.println("Logged In");
-            return menu();
-        }else{
-            if (attemps < 2 ){
-                System.out.println("\nUsuario no encontrado \n" +
-                        "¿Desea intentarlo de nuevo?\n" +
-                        "1.Si\n" +
-                        "2.No\n" +
-                        "Otro.Salir\n");
-                repeatLogIn = scanner.nextInt();
-
-                if (repeatLogIn == 1){
-                    attemps++;
-                    return logIn();
-                }
+        if (account == null){
+            if ( attemps >2){
+                System.out.println("Numero maximo de intentos!");
+                return false;
             }
-            System.out.println("\nNumero maximo de intentos" +
-                    "favor intentar mas tarde !!");
+
+            System.out.println("Usuario no encontrado, ¿Desea intentarlo de nuevo?");
+            repeatLogIn = scanner.next();
+            if (repeatLogIn.equals("1")){
+                attemps++;
+                return logIn();
+            }
         }
-        return false;
+
+        return true;
+
+
     }
 
     /*
