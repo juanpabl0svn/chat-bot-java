@@ -22,17 +22,20 @@ public class Database {
     }
 
 
+
     public Account getAccount(String username, String password) {
         Account account = null;
-        String selectQuery = "SELECT * FROM users WHERE username = " + username + "AND password = " + password;
+        String selectQuery = "SELECT number,owner_nit,debt,balance FROM accounts WHERE username = '" + username + "' AND password = '" + password + "'";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                String name = resultSet.getString("name");
-                String surname = resultSet.getString("surname");
-                account = new Account();
+                String number = resultSet.getString("number");
+                String owner_nit = resultSet.getString("owner_nit");
+                float debt = resultSet.getFloat("debt");
+                float balance = resultSet.getFloat("balance");
+                account = new Account(number,owner_nit,username,balance,debt);
             }
 
             resultSet.close();
@@ -44,34 +47,73 @@ public class Database {
     }
 
 
+
+    public String getAccountNumber() {
+        long randomNumber;
+        String randomNumberString;
+        do {
+            randomNumber = Math.round((Math.random() * 9000000000L + 1000000000L));
+            randomNumberString = Long.toString(randomNumber);
+        }while(accountNumberExist(randomNumberString));
+        return randomNumberString;
+    }
+
+
     public Account createAccount(String nit, String username, String password) {
-        User user = null;
-        String insertQuery = "INSERT INTO users (nit,name,surname) VALUES (? , ? , ?)";
+        Account account = null;
+        String number = getAccountNumber();
+        String insertQuery = "INSERT INTO accounts (number, owner_nit, username, password) VALUES (? , ? , ?, ?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
-            preparedStatement.setString(1, nit);
-            preparedStatement.setString(2, username);
-            preparedStatement.setString(3, password);
+            preparedStatement.setString(1, number);
+            preparedStatement.setString(2, nit);
+            preparedStatement.setString(3, username);
+            preparedStatement.setString(4, password);
 
-            int rowsAffected = preparedStatement.executeUpdate();
-
+            account = preparedStatement.executeUpdate() > 0 ? new Account(number,nit,username,0,0) : null;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
-        return new Account();
+        return account;
     }
 
 
     public boolean usernameExist(String username){
-        return true;
+        String selectQuery = "SELECT username FROM accounts WHERE username = '" + username + "'";
+        boolean exist = false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            exist = resultSet.next();
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return exist;
+    }
+
+    public boolean accountNumberExist(String accountNumber){
+        String selectQuery = "SELECT number FROM accounts WHERE number = '" + accountNumber + "'";
+        boolean exist = false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            exist = resultSet.next();
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return exist;
 
     }
 
 
     public User getUserById(String nit) {
         User cliente = null;
-        String selectQuery = "SELECT * FROM users WHERE nit = " + nit;
+        String selectQuery = "SELECT name,surname,email FROM users WHERE nit = " + nit;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -80,7 +122,6 @@ public class Database {
                 String name = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
                 String email = resultSet.getString("email");
-
                 cliente = new User(nit, name, surname, email);
             }
 
@@ -94,7 +135,7 @@ public class Database {
 
     public User createUser(String nit, String name, String surname, String email) {
         User user = null;
-        String insertQuery = "INSERT INTO users (nit,name,surname) VALUES (? , ? , ?)";
+        String insertQuery = "INSERT INTO users (nit,name,surname,email) VALUES (? , ? , ?, ?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
             preparedStatement.setString(1, nit);
@@ -102,11 +143,8 @@ public class Database {
             preparedStatement.setString(3, surname);
             preparedStatement.setString(4, email);
 
-            int rowsAffected = preparedStatement.executeUpdate();
+            user = preparedStatement.executeUpdate() > 0 ? new User(nit, name, surname, email) : null;
 
-            if (rowsAffected > 0) {
-                user = new User(nit, name, surname, email);
-            }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -178,7 +216,11 @@ public class Database {
 
 
     public static void main(String[] args) {
+
         Database dbManager = new Database();
+
+        String number = dbManager.getAccountNumber();
+        System.out.println(number);
     }
 
 }

@@ -1,6 +1,5 @@
 package org.example;
 
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -52,9 +51,7 @@ public class Main {
         }
 
         user = db.createUser(PersonalData.get(0),PersonalData.get(1),PersonalData.get(2),PersonalData.get(3));
-        //user = new User(PersonalData.get(0),PersonalData.get(1),PersonalData.get(2),PersonalData.get(3));
 
-        System.out.println(user.name);
 
         if (user == null){
             System.out.println("Algo salió mal, ¿Desea intentarlo de nuevo? \n1.Si\nOtro.No");
@@ -69,13 +66,13 @@ public class Main {
             System.out.println("Usuario ya en uso, digite uno nuevo");
             AccountData.set(0,scanner.next());
         }
-        do{
-            System.out.println("Digite una contraseña numerica de 4 digitos");
-            AccountData.add(scanner.next());
-        }while (AccountData.get(1) != null && AccountData.get(1).matches("[0-9]+") && AccountData.get(1).length() == 4);
-
-        account = db.createAccount(PersonalData.get(0),AccountData.get(0),AccountData.get(1));
-
+        System.out.println("Digite una contraseña numerica de 4 digitos");
+        AccountData.add(scanner.next());
+        while (AccountData.get(1) == null && !AccountData.get(1).matches("[0-9]+") && AccountData.get(1).length() != 4){
+            System.out.println("Contraseña debe ser de 4 digitos y solo numeros");
+            AccountData.set(1,scanner.next());
+        }
+        account = db.createAccount(user.nit,AccountData.get(0),AccountData.get(1));
         main.menu();
         return true;
     }
@@ -109,9 +106,14 @@ public class Main {
             }
         }
 
+        user = db.getUserById(account.owner);
+
+        if (user == null) {
+            System.out.println("Algo salió mal, usuario no encontado");
+            return false;
+        }
+        main.menu();
         return true;
-
-
     }
 
     /*
@@ -136,24 +138,15 @@ public class Main {
                     "1.Saldo en mi cuenta\n" +
                     "2.Saldo en pendiente\n" +
                     "3.Abonar dinero al credito\n" +
-
                     "4.Eliminar cuenta\n" +
                     "5.Conocer creditos\n");
             option = scanner.nextInt();
+            if (option == 0) break;
 
-            if (option == 0) {
-                break;
-            }
-            else if (option == 1){
-                currency  = db.getBalance(user.nit);
-                System.out.println("Tu saldo actual es de "+currencyInstance.format(currency));
-            }
-            else if(option == 2){
-                currency  = db.getDebt(user.nit);
-                System.out.println("Tu credito esta en "+currencyInstance.format(currency));
-            }
-            else if (option == 3){
-                System.out.println("¿Cuanto desea abonar?");
+            switch (option) {
+                case 1 -> account.getBalance();
+                case 2 -> account.getDebt();
+                default -> {}
             }
 
             System.out.println("Hay algo mas que pueda hacer por ti?\n" +
