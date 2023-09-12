@@ -1,7 +1,5 @@
 package org.example;
 
-import com.mysql.cj.xdevapi.Client;
-
 public class User {
     public String email;
     public String nit;

@@ -1,5 +1,7 @@
 package org.example;
 
+import java.text.NumberFormat;
+
 public class Account {
 
     String number;
@@ -7,6 +9,8 @@ public class Account {
     float balance;
     float debt;
     String username;
+
+    static NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();
 
     public String getNumber() {
         return number;
@@ -25,7 +29,7 @@ public class Account {
     }
 
     public float getBalance() {
-        System.out.println("Su saldo actual es de " + balance);
+        System.out.println("Su saldo actual es de " + currencyInstance.format(balance));
         return balance;
     }
 
@@ -34,7 +38,7 @@ public class Account {
     }
 
     public float getDebt() {
-        System.out.println("Su credito actual es de " + debt);
+        System.out.println("Su credito actual es de " + currencyInstance.format(debt));
         return debt;
     }
 

@@ -1,6 +1,4 @@
 package org.example;
-
-import java.security.PublicKey;
 import java.sql.*;
 import java.sql.SQLException;
 

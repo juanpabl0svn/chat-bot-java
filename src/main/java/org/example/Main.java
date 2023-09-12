@@ -1,9 +1,8 @@
 package org.example;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.text.NumberFormat;
+
 
 
 public class Main {
@@ -13,15 +12,13 @@ public class Main {
     static User user = null;
     static Account account = null;
     static Main main = new Main();
-    static NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();
 
     public void sayHi(){
         System.out.println("Hola, yo soy, tu asistente virtual, ya estas registrado en Nu Bank? \n1.Si\n2.No\nOtro.Salir\n");
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args){
         int isRegistered;
-        boolean succesfulyCreated;
 
         main.sayHi();
 
@@ -51,7 +48,6 @@ public class Main {
         }
 
         user = db.createUser(PersonalData.get(0),PersonalData.get(1),PersonalData.get(2),PersonalData.get(3));
-
 
         if (user == null){
             System.out.println("Algo salió mal, ¿Desea intentarlo de nuevo? \n1.Si\nOtro.No");
@@ -88,8 +84,6 @@ public class Main {
             data.add(scanner.next());
         }
 
-
-        //user = db.getUserById(nit);
         account = db.getAccount(data.get(0),data.get(1));
 
         if (account == null){
@@ -116,19 +110,11 @@ public class Main {
         return true;
     }
 
-    /*
-    public boolean createAccount(){
-
-    }
-
-     */
-
 
     public boolean menu(){
 
         int option;
 
-        float currency;
 
         do{
             System.out.println("Bienvenido "+user.name+ " " + user.surname+ ", estoy" +
@@ -149,9 +135,7 @@ public class Main {
                 default -> {}
             }
 
-            System.out.println("Hay algo mas que pueda hacer por ti?\n" +
-                    "1.Si\n" +
-                    "Otro.No\n");
+            System.out.println("Hay algo mas que pueda hacer por ti?\n1.Si\nOtro.No\n");
 
             option = scanner.nextInt();
 
