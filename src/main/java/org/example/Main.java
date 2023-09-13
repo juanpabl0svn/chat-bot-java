@@ -69,7 +69,7 @@ public class Main {
             AccountData.set(1,scanner.next());
         }
         account = db.createAccount(user.nit,AccountData.get(0),AccountData.get(1));
-        main.menu();
+        menu();
         return true;
     }
 
@@ -106,8 +106,15 @@ public class Main {
             System.out.println("Algo salió mal, usuario no encontado");
             return false;
         }
-        main.menu();
+        menu();
         return true;
+    }
+
+    public void makeAPQR(){
+        System.out.println("Ingrese su PQR");
+        String context = scanner.nextLine();
+        System.out.println("Lamentamos mucho que haya tenido este inconveniente, lo resolveremos y nos comunicaremos tan rapido como sea posible con usted");
+        db.PQR(user.nit,context);
     }
 
 
@@ -115,23 +122,26 @@ public class Main {
 
         int option;
 
-
         do{
             System.out.println("Bienvenido "+user.name+ " " + user.surname+ ", estoy" +
                     " aqui para resolver tu dudas y inquietudes, " +
                     "selecciona una de las siguientes opciones:\n" +
                     "0.Salir\n" +
                     "1.Saldo en mi cuenta\n" +
-                    "2.Saldo en pendiente\n" +
-                    "3.Abonar dinero al credito\n" +
-                    "4.Eliminar cuenta\n" +
-                    "5.Conocer creditos\n");
+                    "2.Saldo pendiente\n" +
+                    "3.Realizar PQR\n" +
+                    "4.Solicitar tarjeta\n"+
+                    "5.Cambiar contraseña"+
+                    "6.Cerrar cuenta\n");
             option = scanner.nextInt();
             if (option == 0) break;
 
             switch (option) {
                 case 1 -> account.getBalance();
                 case 2 -> account.getDebt();
+                case 3 -> makeAPQR();
+                case 4 -> {}
+                case 5 ->
                 default -> {}
             }
 

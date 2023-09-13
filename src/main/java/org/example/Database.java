@@ -57,6 +57,19 @@ public class Database {
     }
 
 
+    public void PQR(String nit, String context){
+        String insertQuery = "INSERT INTO pqrs (nit, context) VALUES (? , ?)";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            preparedStatement.setString(1, nit);
+            preparedStatement.setString(2, context);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public Account createAccount(String nit, String username, String password) {
         Account account = null;
         String number = getAccountNumber();

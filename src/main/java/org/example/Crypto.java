@@ -11,7 +11,7 @@ public class Crypto {
     static String secretKey = "nubanksecretkey";
 
 
-    public static String Encriptar(String texto) {
+    public static String encrypt(String texto) {
 
         String base64EncryptedString = "";
 
@@ -34,7 +34,7 @@ public class Crypto {
         }
         return base64EncryptedString;
     }
-    public static String Desencriptar(String textoEncriptado) {
+    public static String decrypt(String textoEncriptado) {
 
         String base64EncryptedString = "";
 
@@ -59,12 +59,7 @@ public class Crypto {
     }
 
     public static void main(String[] args) {
-        String text = "9989";
-        String encript = Crypto.Encriptar(text);
-        String decript = Crypto.Desencriptar(encript);
 
-        System.out.println(encript + " " + decript
-        );
 
     }
 }
