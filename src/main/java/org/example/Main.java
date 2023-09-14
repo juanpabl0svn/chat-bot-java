@@ -110,11 +110,27 @@ public class Main {
         return true;
     }
 
-    public void makeAPQR(){
+    public void makePQR(){
         System.out.println("Ingrese su PQR");
         String context = scanner.nextLine();
         System.out.println("Lamentamos mucho que haya tenido este inconveniente, lo resolveremos y nos comunicaremos tan rapido como sea posible con usted");
         db.PQR(user.nit,context);
+    }
+
+    public void getNewCard(){
+
+    }
+
+    public void changePassword(){
+
+    }
+
+    public void deleteAccount(){
+
+    }
+
+    public void getAsesor(){
+        System.out.println("Ingresa tu numero de telefono para que un asesor se comunique contigo");
     }
 
 
@@ -139,9 +155,11 @@ public class Main {
             switch (option) {
                 case 1 -> account.getBalance();
                 case 2 -> account.getDebt();
-                case 3 -> makeAPQR();
-                case 4 -> {}
-                case 5 ->
+                case 3 -> makePQR();
+                case 4 -> getNewCard();
+                case 5 -> changePassword();
+                case 6 -> deleteAccount();
+                case 7 -> getAsesor();
                 default -> {}
             }
 
