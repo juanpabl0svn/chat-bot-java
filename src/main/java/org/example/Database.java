@@ -44,7 +44,29 @@ public class Database {
         return account;
     }
 
+    public void changePassword(String username,String password){
+        String insertQuery = "UPDATE users SET password = ? WHERE username = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            preparedStatement.setString(1, password);
+            preparedStatement.setString(2, username);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+    }
+
+    public void deleteAccount(String account_number){
+        String insertQuery = "UPDATE accounts SET active = 0 WHERE account_number = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            preparedStatement.setString(1, account_number);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public String getAccountNumber() {
         long randomNumber;
@@ -55,8 +77,7 @@ public class Database {
         }while(accountNumberExist(randomNumberString));
         return randomNumberString;
     }
-
-
+    
     public void PQR(String nit, String context){
         String insertQuery = "INSERT INTO pqrs (nit, context) VALUES (? , ?)";
         try {

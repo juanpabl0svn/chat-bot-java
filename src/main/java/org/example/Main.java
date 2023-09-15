@@ -19,9 +19,7 @@ public class Main {
 
     public static void main(String[] args){
         int isRegistered;
-
         main.sayHi();
-
         isRegistered  = scanner.nextInt();
 
         switch (isRegistered) {
@@ -83,15 +81,12 @@ public class Main {
             System.out.println("Ingrese por favor " + question);
             data.add(scanner.next());
         }
-
         account = db.getAccount(data.get(0),data.get(1));
-
         if (account == null){
             if ( attemps >2){
                 System.out.println("Numero maximo de intentos!");
                 return false;
             }
-
             System.out.println("Usuario no encontrado, ¿Desea intentarlo de nuevo?");
             repeatLogIn = scanner.next();
             if (repeatLogIn.equals("1")){
@@ -99,9 +94,7 @@ public class Main {
                 return logIn();
             }
         }
-
         user = db.getUserById(account.owner);
-
         if (user == null) {
             System.out.println("Algo salió mal, usuario no encontado");
             return false;
@@ -109,7 +102,6 @@ public class Main {
         menu();
         return true;
     }
-
     public void makePQR(){
         System.out.println("Ingrese su PQR");
         String context = scanner.nextLine();
@@ -117,24 +109,32 @@ public class Main {
         db.PQR(user.nit,context);
     }
 
-    public void getNewCard(){
-
-    }
-
     public void changePassword(){
-
+        String newPassword;
+        do{
+            System.out.println("Escribe tu nueva contraseña (Recuerda que deben ser solo numeros y de 4 cifras");
+            newPassword = scanner.next();
+        }while(newPassword == null && !newPassword.matches("[0-9]+") && newPassword.length() != 4);
+        db.changePassword(account.username,newPassword);
+        System.out.println("Contraseña correctamente guardada");
     }
 
-    public void deleteAccount(){
-
+    public boolean deleteAccount(){
+        int answer;
+        do{
+            System.out.println("¿Esta seguro que desea borrar su cuenta y toda su información\n1.Si\n2.No");
+            answer = scanner.nextInt();
+        }while(answer != 1 && answer != 2);
+        if (answer == 1){
+            db.deleteAccount(account.number);
+            System.out.println("Cuenta correctamente borrada");
+            return true;
+        }
+        System.out.println("Proceso interrumpido");
+        return false;
     }
 
-    public void getAsesor(){
-        System.out.println("Ingresa tu numero de telefono para que un asesor se comunique contigo");
-    }
-
-
-    public boolean menu(){
+        public boolean menu(){
 
         int option;
 
@@ -142,13 +142,12 @@ public class Main {
             System.out.println("Bienvenido "+user.name+ " " + user.surname+ ", estoy" +
                     " aqui para resolver tu dudas y inquietudes, " +
                     "selecciona una de las siguientes opciones:\n" +
-                    "0.Salir\n" +
-                    "1.Saldo en mi cuenta\n" +
-                    "2.Saldo pendiente\n" +
-                    "3.Realizar PQR\n" +
-                    "4.Solicitar tarjeta\n"+
-                    "5.Cambiar contraseña"+
-                    "6.Cerrar cuenta\n");
+                    "0.Salir\n"+
+                    "1.Saldo en mi cuenta\n"+
+                    "2.Saldo pendiente\n"+
+                    "3.Realizar PQR\n"+
+                    "4.Cambiar contraseña"+
+                    "5.Cerrar cuenta\n");
             option = scanner.nextInt();
             if (option == 0) break;
 
@@ -156,10 +155,8 @@ public class Main {
                 case 1 -> account.getBalance();
                 case 2 -> account.getDebt();
                 case 3 -> makePQR();
-                case 4 -> getNewCard();
-                case 5 -> changePassword();
-                case 6 -> deleteAccount();
-                case 7 -> getAsesor();
+                case 4 -> changePassword();
+                case 5 -> deleteAccount();
                 default -> {}
             }
 
