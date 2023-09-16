@@ -8,7 +8,6 @@ public class Database {
     private static final String JDBC_USER = "root";
     private static final String JDBC_PASSWORD = "";
 
-
     private Connection connection;
 
     public Database() {
@@ -22,13 +21,14 @@ public class Database {
 
 
     public Account getAccount(String username, String password) {
+        String cryptedPassword = Crypto.encrypt(password);
         Account account = null;
-        String selectQuery = "SELECT number,owner_nit,debt,balance FROM accounts WHERE username = '" + username + "' AND password = '" + password + "'";
+        String selectQuery = "SELECT number,owner_nit,debt,balance,active FROM accounts WHERE username = '" + username + "' AND password = '" + cryptedPassword + "'";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            if (resultSet.next() && resultSet.getString("active").equals("1")) {
                 String number = resultSet.getString("number");
                 String owner_nit = resultSet.getString("owner_nit");
                 float debt = resultSet.getFloat("debt");
@@ -45,20 +45,20 @@ public class Database {
     }
 
     public void changePassword(String username,String password){
-        String insertQuery = "UPDATE users SET password = ? WHERE username = ?";
+        String cryptedPassword = Crypto.encrypt(password);
+        String insertQuery = "UPDATE accounts SET password = ? WHERE username = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
-            preparedStatement.setString(1, password);
+            preparedStatement.setString(1, cryptedPassword);
             preparedStatement.setString(2, username);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public void deleteAccount(String account_number){
-        String insertQuery = "UPDATE accounts SET active = 0 WHERE account_number = ?";
+        String insertQuery = "UPDATE accounts SET active = 0 WHERE number = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
             preparedStatement.setString(1, account_number);
@@ -77,7 +77,7 @@ public class Database {
         }while(accountNumberExist(randomNumberString));
         return randomNumberString;
     }
-    
+
     public void PQR(String nit, String context){
         String insertQuery = "INSERT INTO pqrs (nit, context) VALUES (? , ?)";
         try {
@@ -142,7 +142,6 @@ public class Database {
 
     }
 
-
     public User getUserById(String nit) {
         User cliente = null;
         String selectQuery = "SELECT name,surname,email FROM users WHERE nit = " + nit;
@@ -185,66 +184,7 @@ public class Database {
     }
 
 
-    public float getBalance(String id) {
-        float balance = -1;
-        String selectQuery = "SELECT a.balance as balance " +
-                "FROM users u " +
-                "JOIN accounts a ON u.nit = a.owner_nit " +
-                "WHERE u.nit = " + id;
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
-                balance = resultSet.getFloat("balance");
-            }
-
-            resultSet.close();
-            preparedStatement.close();
-        } catch (SQLException e) {
-
-            System.out.println(e);
-            e.printStackTrace();
-            return balance;
-        }
-
-        return balance;
-
-    }
-
-    public float getDebt(String id) {
-        float debt = -1;
-        String selectQuery = "SELECT a.debt as debt " +
-                "FROM users u " +
-                "JOIN accounts a ON u.nit = a.owner_nit " +
-                "WHERE u.nit = " + id;
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                debt = resultSet.getFloat("debt");
-            }
-
-            resultSet.close();
-            preparedStatement.close();
-        } catch (SQLException e) {
-
-            System.out.println(e);
-            e.printStackTrace();
-            return debt;
-        }
-
-        return debt;
-
-    }
-
-    /*
-    public float payDebt(String id){
-
-    }
-
-     */
 
 
     public static void main(String[] args) {

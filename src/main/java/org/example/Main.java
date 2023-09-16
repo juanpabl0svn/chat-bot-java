@@ -87,7 +87,7 @@ public class Main {
                 System.out.println("Numero maximo de intentos!");
                 return false;
             }
-            System.out.println("Usuario no encontrado, ¿Desea intentarlo de nuevo?");
+            System.out.println("Usuario no encontrado, ¿Desea intentarlo de nuevo?\n1.Si\nOtro.No");
             repeatLogIn = scanner.next();
             if (repeatLogIn.equals("1")){
                 attemps++;
@@ -103,6 +103,7 @@ public class Main {
         return true;
     }
     public void makePQR(){
+        scanner.nextLine(); //Consume the last line
         System.out.println("Ingrese su PQR");
         String context = scanner.nextLine();
         System.out.println("Lamentamos mucho que haya tenido este inconveniente, lo resolveremos y nos comunicaremos tan rapido como sea posible con usted");
@@ -119,7 +120,7 @@ public class Main {
         System.out.println("Contraseña correctamente guardada");
     }
 
-    public boolean deleteAccount(){
+    public void deleteAccount(){
         int answer;
         do{
             System.out.println("¿Esta seguro que desea borrar su cuenta y toda su información\n1.Si\n2.No");
@@ -128,10 +129,12 @@ public class Main {
         if (answer == 1){
             db.deleteAccount(account.number);
             System.out.println("Cuenta correctamente borrada");
-            return true;
+            account = null;
         }
-        System.out.println("Proceso interrumpido");
-        return false;
+        else{
+            System.out.println("Proceso interrumpido");
+        }
+
     }
 
         public boolean menu(){
@@ -146,7 +149,7 @@ public class Main {
                     "1.Saldo en mi cuenta\n"+
                     "2.Saldo pendiente\n"+
                     "3.Realizar PQR\n"+
-                    "4.Cambiar contraseña"+
+                    "4.Cambiar contraseña\n"+
                     "5.Cerrar cuenta\n");
             option = scanner.nextInt();
             if (option == 0) break;
@@ -159,6 +162,7 @@ public class Main {
                 case 5 -> deleteAccount();
                 default -> {}
             }
+            if (account == null) break;
 
             System.out.println("Hay algo mas que pueda hacer por ti?\n1.Si\nOtro.No\n");
 

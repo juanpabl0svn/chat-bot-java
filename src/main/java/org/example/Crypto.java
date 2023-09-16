@@ -11,6 +11,7 @@ public class Crypto {
     static String secretKey = "nubanksecretkey";
 
 
+
     public static String encrypt(String texto) {
 
         String base64EncryptedString = "";
@@ -59,7 +60,6 @@ public class Crypto {
     }
 
     public static void main(String[] args) {
-
 
     }
 }
