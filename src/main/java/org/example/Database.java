@@ -1,6 +1,7 @@
 package org.example;
 import java.sql.*;
 import java.sql.SQLException;
+import java.util.Locale;
 
 
 public class Database {
@@ -19,11 +20,10 @@ public class Database {
     }
 
 
-
     public Account getAccount(String username, String password) {
         String cryptedPassword = Crypto.encrypt(password);
         Account account = null;
-        String selectQuery = "SELECT number,owner_nit,debt,balance,active FROM accounts WHERE username = '" + username + "' AND password = '" + cryptedPassword + "'";
+        String selectQuery = "SELECT number,owner_nit,debt,balance,active FROM accounts WHERE username = '" + username.toUpperCase() + "' AND password = '" + cryptedPassword + "'";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -50,7 +50,7 @@ public class Database {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
             preparedStatement.setString(1, cryptedPassword);
-            preparedStatement.setString(2, username);
+            preparedStatement.setString(2, username.toUpperCase());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,7 +99,7 @@ public class Database {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
             preparedStatement.setString(1, number);
             preparedStatement.setString(2, nit);
-            preparedStatement.setString(3, username);
+            preparedStatement.setString(3, username.toUpperCase());
             preparedStatement.setString(4, password);
 
             account = preparedStatement.executeUpdate() > 0 ? new Account(number,nit,username,0,0) : null;
@@ -112,7 +112,7 @@ public class Database {
 
 
     public boolean usernameExist(String username){
-        String selectQuery = "SELECT username FROM accounts WHERE username = '" + username + "'";
+        String selectQuery = "SELECT username FROM accounts WHERE username = '" + username.toUpperCase() + "'";
         boolean exist = false;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
@@ -170,11 +170,11 @@ public class Database {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
             preparedStatement.setString(1, nit);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, surname);
-            preparedStatement.setString(4, email);
+            preparedStatement.setString(2, name.toUpperCase());
+            preparedStatement.setString(3, surname.toUpperCase());
+            preparedStatement.setString(4, email.toUpperCase());
 
-            user = preparedStatement.executeUpdate() > 0 ? new User(nit, name, surname, email) : null;
+            user = preparedStatement.executeUpdate() > 0 ? new User(nit.toUpperCase(), name.toUpperCase(), surname.toUpperCase(), email.toUpperCase()) : null;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -184,15 +184,8 @@ public class Database {
     }
 
 
-
-
-
     public static void main(String[] args) {
 
-        Database dbManager = new Database();
-
-        String number = dbManager.getAccountNumber();
-        System.out.println(number);
     }
 
 }

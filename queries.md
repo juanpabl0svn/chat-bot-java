@@ -23,22 +23,21 @@ CREATE TABLE IF NOT EXISTS pqrs(
 id_pqrs INT PRIMARY KEY AUTO_INCREMENT,
 nit VARCHAR(15) not null,
 context VARCHAR(255) NOT NULL,
-FOREIGN KEY (id_user) REFERENCES users(nit)
+FOREIGN KEY (nit) REFERENCES users(nit)
 );
 
 -- Insertar registros en la tabla 'users'
 INSERT INTO users (nit, name, surname, email) VALUES
-('1234', 'Juan', 'Pérez', 'juan@example.com'),
-('5678', 'María', 'López', 'maria@example.com'),
-('9123', 'Carlos', 'Gómez', 'carlos@example.com'),
-('4567', 'Laura', 'Martínez', 'laura@example.com'),
-('8912', 'Andrés', 'Rodríguez', 'andres@example.com');
+('1234', 'JUAN', 'PEREZ', 'JUANP@EXAMPLE.COM'),
+('5678', 'MARIA', 'López', 'MARIA@EXAMPLE.COM'),
+('9123', 'CARLOS', 'GOMEZ', 'CARLOS@EXAMPLE.COM'),
+('4567', 'LAURA', 'MARTINEZ', 'LAURA@EXAMPLE.COM'),
+('8912', 'ANDRES', 'RODRIGUEZ', 'ANDREZ@EXAMPLE.COM');
 
 -- Insertar registros en la tabla 'accounts'
 INSERT INTO accounts (number, owner_nit, balance,debt, username, password) VALUES
-('1234567890', '1234', 1500.00, 'user1', '7yzdb5dSkTU='),   --1234
-('2345678901', '5678', 2500.00, 'user2', '0JdVrWQcJ+g='),   --2345
-('3456789012', '9123', 750.00, 'user3', 'bTD+kxrIekM='),    --2525
-('4567890123', '4567', 3000.00, 'user4', '2PbqmaTPgWM='),   --0000
-('5678901234', '8912', 500.00, 'user5', 'r+zrEbjRtB0=');    --2020
-
+('1234567890', '1234', 1500.00, 0,'USER1', '7yzdb5dSkTU='),
+('2345678901', '5678', 2500.00,2000 ,'USER2', '0JdVrWQcJ+g='),  
+('3456789012', '9123', 750.00, 300,'USER3', 'bTD+kxrIekM='),  
+('4567890123', '4567', 3000.00, 15,'USER4', '2PbqmaTPgWM='),   
+('5678901234', '8912', 500.00, 800,'USER5', 'r+zrEbjRtB0='); 

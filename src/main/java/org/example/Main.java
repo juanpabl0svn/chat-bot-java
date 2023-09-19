@@ -30,6 +30,8 @@ public class Main {
         main.sayBye();
     }
 
+
+
     public void sayBye(){
         System.out.println("\nGracias por usar nuestro servicio de asistente virtual, nos vemos pronto!!");
     }
@@ -37,12 +39,18 @@ public class Main {
     public boolean signIn(){
         ArrayList<String> PersonalData = new ArrayList<>();
         ArrayList<String> AccountData = new ArrayList<>();
-        String[] questionsPersonalData = {"numero de identificación","primer nombre", "primer apellido","correo electronico"};
+        String value;
+        String[] questionsPersonalData = {"numero de identificación","primer y segundo nombre (si tiene)", "apellidos","correo electronico"};
         String tries;
 
+        scanner.nextLine();
+
         for(String question: questionsPersonalData){
-            System.out.println("Ingrese su " + question);
-            PersonalData.add(scanner.next());
+            do{
+                System.out.println("Ingrese su " + question + " (Obligatorio)");
+                value = scanner.nextLine();
+            }while(value.isEmpty());
+            PersonalData.add(value);
         }
 
         user = db.createUser(PersonalData.get(0),PersonalData.get(1),PersonalData.get(2),PersonalData.get(3));
@@ -50,11 +58,11 @@ public class Main {
         if (user == null){
             System.out.println("Algo salió mal, ¿Desea intentarlo de nuevo? \n1.Si\nOtro.No");
             tries = scanner.next();
-            if (tries.equals("1")) {main.signIn();}
+            if (tries.equals("1")) signIn();
             return false;
         }
 
-        System.out.println("Usuario correctamente creado, ahora digite la siguiente información para la creación de su cuenta\nIngrese un nombre de usuario");
+        System.out.println("Usuario correctamente creado, ahora digite la siguiente información para la creación de su cuenta\nIngrese un nombre de usuario sin espacios");
         AccountData.add(scanner.next());
         while (db.usernameExist(AccountData.get(0))){
             System.out.println("Usuario ya en uso, digite uno nuevo");
@@ -62,7 +70,7 @@ public class Main {
         }
         System.out.println("Digite una contraseña numerica de 4 digitos");
         AccountData.add(scanner.next());
-        while (AccountData.get(1) == null && !AccountData.get(1).matches("[0-9]+") && AccountData.get(1).length() != 4){
+        while (!AccountData.get(1).matches("[0-9]+") || AccountData.get(1).length() != 4){
             System.out.println("Contraseña debe ser de 4 digitos y solo numeros");
             AccountData.set(1,scanner.next());
         }
@@ -70,7 +78,6 @@ public class Main {
         menu();
         return true;
     }
-
 
     public boolean logIn() {
         String[] questionsLogIn = {"su usuario", "su contraseña"};
@@ -115,7 +122,7 @@ public class Main {
         do{
             System.out.println("Escribe tu nueva contraseña (Recuerda que deben ser solo numeros y de 4 cifras");
             newPassword = scanner.next();
-        }while(newPassword == null && !newPassword.matches("[0-9]+") && newPassword.length() != 4);
+        }while(!newPassword.matches("[0-9]+") || newPassword.length() != 4);
         db.changePassword(account.username,newPassword);
         System.out.println("Contraseña correctamente guardada");
     }
